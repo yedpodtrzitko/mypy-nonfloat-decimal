@@ -3,7 +3,11 @@
 from typing import Callable, Optional
 
 from mypy.plugin import FunctionContext, Plugin
-from mypy.types import AnyType, Instance, Type
+from mypy.types import AnyType, Instance, Type, UnionType, TupleType
+
+
+class InvalidType(ValueError):
+    pass
 
 
 class DecimalNonFloatPlugin(Plugin):
@@ -36,21 +40,31 @@ def analyze_decimal_call(ctx: FunctionContext) -> Type:
         # no arguments passed
         pass
     else:
-        if isinstance(param, AnyType):
-            # dont do anything with `Any`
-            pass
-        elif not hasattr(param, "type"):
-            ctx.api.note(
-                'Unexpected type passed to Decimal (expected "Union[int, str, Decimal]"), got {} instead'.format(
-                    param
-                ),
-                ctx.context,
-            )
-        elif param.type.name() not in ("str", "int", "Decimal"):
+        try:
+            consider_decimal_type(ctx, param)
+        except InvalidType as e:
             ctx.api.fail(
-                'Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got {} instead'.format(
-                    param.type.name()
+                'Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got {} instead (offender: {})'.format(
+                    param, str(e)
                 ),
                 ctx.context,
             )
+
     return ctx.default_return_type
+
+
+def consider_decimal_type(ctx, param) -> None:
+    if isinstance(param, AnyType):
+        pass  # dont do anything with `Any`
+    elif isinstance(param, (UnionType, TupleType)):
+        for item in param.items:
+            consider_decimal_type(ctx, item)
+    elif not hasattr(param, "type"):
+        ctx.api.note(
+            'Unexpected type passed to Decimal (expected "Union[int, str, Decimal]"), got {} instead'.format(
+                param
+            ),
+            ctx.context,
+        )
+    elif param.type.name() not in ("str", "int", "Decimal"):
+        raise InvalidType(param.type.name())

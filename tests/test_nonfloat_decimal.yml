@@ -1,11 +1,43 @@
-- case: test_nonfloat_decimal
+- case: test_nonfloat_decimal_err
   main: |
     from decimal import Decimal
+    from math import inf
+
     Decimal("1.02")
     Decimal(Decimal("1.02"))
     Decimal(1)
-    Decimal(1.02)
     Decimal()
+    Decimal((1, (3, 1, 4), -2))
+    Decimal(1.02)
 
   out: |
-    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got float instead
+    main:9: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got builtins.float instead (offender: float)
+
+- case: test_any_union_ok
+  main: |
+    from decimal import Decimal
+    from typing import Any, Union
+
+    b = 1  # type: Union[int, Any]
+    Decimal(b)
+  out: ""
+
+- case: test_float_union_err
+  main: |
+    from decimal import Decimal
+    from typing import Any, Union, Sequence, Tuple
+
+    c = 1  # type: Union[Decimal, float, str, int]
+    Decimal(c)
+  out: |
+    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got Union[decimal.Decimal, builtins.float, builtins.str, builtins.int] instead (offender: float)
+
+- case: test_complex_nested_tuple_union_err
+  main: |
+    from decimal import Decimal
+    from typing import Any, Union, Sequence, Tuple
+
+    d = 1  # type: Union[Decimal, float, str, Tuple[int, Sequence[int], int]]
+    Decimal(d)
+  out: |
+    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got Union[decimal.Decimal, builtins.float, builtins.str, Tuple[builtins.int, typing.Sequence[builtins.int], builtins.int]] instead (offender: float)
