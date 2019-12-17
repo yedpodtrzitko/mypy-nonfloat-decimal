@@ -10,6 +10,11 @@ class InvalidType(ValueError):
     pass
 
 
+def _get_type_name(type_name) -> str:
+    """Mypy API of type name has changed from callable to property."""
+    return type_name() if callable(type_name) else type_name
+
+
 class DecimalNonFloatPlugin(Plugin):
     """Mypy plugin for checking only certain types to be passed to Decimal().
 
@@ -66,5 +71,5 @@ def consider_decimal_type(ctx, param) -> None:
             ),
             ctx.context,
         )
-    elif param.type.name() not in ("str", "int", "Decimal"):
-        raise InvalidType(param.type.name())
+    elif _get_type_name(param.type.name) not in ("str", "int", "Decimal"):
+        raise InvalidType(_get_type_name(param.type.name))
