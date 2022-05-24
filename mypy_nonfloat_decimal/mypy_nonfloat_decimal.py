@@ -65,7 +65,6 @@ def consider_decimal_type(ctx, param) -> None:
         for item in param.items:
             consider_decimal_type(ctx, item)
     elif isinstance(param, (LiteralType,)):
-        print('literal', param, param.value, type(param.value))
         if not isinstance(param.value, (int, str, Decimal)):
             raise InvalidType(type(param.value))
 
