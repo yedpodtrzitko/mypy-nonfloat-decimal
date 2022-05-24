@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7
+
+- remove forgotten `print` (#5)
+- update pyyaml dependency (#4)
+
 ## 0.1.6
 
 - add `Literal` traversal (#2)

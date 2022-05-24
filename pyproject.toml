@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mypy-nonfloat-decimal"
-version = "0.1.6"
+version = "0.1.7"
 description = "Mypy plugin to prevent passing float type to Decimal to avoid imprecisions."
 authors = ["yedpodtrzitko <yedpodtrzitko@gmail.com>"]
 license = "MIT"
