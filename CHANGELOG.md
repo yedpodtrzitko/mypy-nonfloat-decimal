@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6
+
+- add `Literal` traversal (#2)
+
 ## 0.1.5
 
 - add compatibility with mypy 0.960 (#3)

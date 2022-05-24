@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mypy-nonfloat-decimal"
-version = "0.1.5"
+version = "0.1.6"
 description = "Mypy plugin to prevent passing float type to Decimal to avoid imprecisions."
 authors = ["yedpodtrzitko <yedpodtrzitko@gmail.com>"]
 license = "MIT"
@@ -17,3 +17,7 @@ pytest-mypy-plugins = "^1.9.0"
 [build-system]
 requires = ["poetry>=1.0"]
 build-backend = "poetry.masonry.api"
+
+[tool.isort]
+known_first_party="mypy_nonfloat_decimal"
+profile="black"
