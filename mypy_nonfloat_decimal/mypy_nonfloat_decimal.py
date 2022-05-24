@@ -1,9 +1,9 @@
 """Mypy plugin: non-float check for Decimal."""
-
+from decimal import Decimal
 from typing import Callable, Optional
 
 from mypy.plugin import FunctionContext, Plugin
-from mypy.types import AnyType, Instance, Type, UnionType, TupleType
+from mypy.types import AnyType, Instance, LiteralType, TupleType, Type, UnionType
 
 
 class InvalidType(ValueError):
@@ -64,6 +64,11 @@ def consider_decimal_type(ctx, param) -> None:
     elif isinstance(param, (UnionType, TupleType)):
         for item in param.items:
             consider_decimal_type(ctx, item)
+    elif isinstance(param, (LiteralType,)):
+        print('literal', param, param.value, type(param.value))
+        if not isinstance(param.value, (int, str, Decimal)):
+            raise InvalidType(type(param.value))
+
     elif not hasattr(param, "type"):
         ctx.api.note(
             'Unexpected type passed to Decimal (expected "Union[int, str, Decimal]"), got {} instead'.format(
