@@ -29,7 +29,7 @@ class DecimalNonFloatPlugin(Plugin):
         :param fullname: full name of the type to consider
         :return: callback for specific type call
         """
-        if fullname == "decimal.Decimal":
+        if fullname in ("_decimal.Decimal", "decimal.Decimal"):
             return analyze_decimal_call
         return None
 
