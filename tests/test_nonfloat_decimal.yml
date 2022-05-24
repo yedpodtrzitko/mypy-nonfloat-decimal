@@ -14,6 +14,8 @@
 
   out: |
     main:10: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got builtins.float instead (offender: float)
+    main:11: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got builtins.object instead (offender: object)
+    main:11: error: Argument 1 to "Decimal" has incompatible type "object"; expected "Union[Decimal, float, str, Tuple[int, Sequence[int], int]]"
 
 - case: test_any_union_ok
   main: |
@@ -32,7 +34,7 @@
     c = 1  # type: Union[Decimal, float, str, int]
     Decimal(c)
   out: |
-    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got Union[decimal.Decimal, builtins.float, builtins.str, builtins.int] instead (offender: float)
+    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got Union[_decimal.Decimal, builtins.float, builtins.str, builtins.int] instead (offender: float)
 
 - case: test_complex_nested_tuple_union_err
   main: |
@@ -42,4 +44,4 @@
     d = 1  # type: Union[Decimal, float, str, Tuple[int, Sequence[int], int]]
     Decimal(d)
   out: |
-    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got Union[decimal.Decimal, builtins.float, builtins.str, Tuple[builtins.int, typing.Sequence[builtins.int], builtins.int]] instead (offender: float)
+    main:5: error: Invalid type passed to Decimal (expected "Union[int, str, Decimal]"), got Union[_decimal.Decimal, builtins.float, builtins.str, Tuple[builtins.int, typing.Sequence[builtins.int], builtins.int]] instead (offender: float)
