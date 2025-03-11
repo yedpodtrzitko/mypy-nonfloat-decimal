@@ -1,21 +1,21 @@
 [tool.poetry]
 name = "mypy-nonfloat-decimal"
-version = "0.1.7"
+version = "0.1.8"
 description = "Mypy plugin to prevent passing float type to Decimal to avoid imprecisions."
 authors = ["yedpodtrzitko <yedpodtrzitko@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">3.9"
 mypy = ">= 0.720"
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.0"
-pytest-mypy-plugins = "^1.9.0"
+[tool.poetry.group.dev.dependencies]
+pytest = ">=6.0"
+pytest-mypy-plugins = "^3.2.0"
 
 [build-system]
-requires = ["poetry>=1.0"]
+requires = ["poetry>=2.0"]
 build-backend = "poetry.masonry.api"
 
 [tool.isort]
