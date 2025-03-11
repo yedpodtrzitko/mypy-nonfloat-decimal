@@ -1,9 +1,19 @@
 """Mypy plugin: non-float check for Decimal."""
+
 from decimal import Decimal
 from typing import Callable, Optional
 
+from mypy.errorcodes import MISC, ErrorCode
 from mypy.plugin import FunctionContext, Plugin
 from mypy.types import AnyType, Instance, LiteralType, TupleType, Type, UnionType
+
+VALID_DECIMAL_ARG = ErrorCode(
+    "valid-decimal-arg",
+    "Check valid argument provided when constructing a Decimal, e.g. non-float",
+    "General",
+    # Make a subcode of `misc` for backward compatibility.
+    sub_code_of=MISC,
+)
 
 
 class InvalidType(ValueError):
@@ -53,6 +63,7 @@ def analyze_decimal_call(ctx: FunctionContext) -> Type:
                     param, str(e)
                 ),
                 ctx.context,
+                code=VALID_DECIMAL_ARG,
             )
 
     return ctx.default_return_type
